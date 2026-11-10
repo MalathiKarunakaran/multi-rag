@@ -1,12 +1,19 @@
 """
 Multi-PDF RAG App with Sources
 Run: streamlit run rag_app.py
-Needs: OPENAI_API_KEY in the environment (optional: OPENAI_CHAT_MODEL)
+Needs: a .env file next to this script containing
+    OPENAI_API_KEY=sk-...
+    OPENAI_CHAT_MODEL=gpt-4o-mini   (optional)
 """
 import os
 import re
 import hashlib
 import tempfile
+
+from dotenv import load_dotenv
+
+# Load .env from the script's folder, regardless of where streamlit is launched
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
 
 import streamlit as st
 from langchain_community.document_loaders import PyPDFLoader
@@ -25,7 +32,10 @@ st.set_page_config(page_title="Multi-PDF RAG", page_icon="📚")
 st.title("📚 Multi-PDF RAG with Sources")
 
 if not os.getenv("OPENAI_API_KEY"):
-    st.error("OPENAI_API_KEY is not set. Export it in your terminal and restart.")
+    st.error(
+        "OPENAI_API_KEY not found. Create a .env file next to rag_app.py with "
+        "OPENAI_API_KEY=sk-... and restart."
+    )
     st.stop()
 
 
